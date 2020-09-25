@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Redirecting...</title>
+<style>body{font-family:sans-serif}</style>
+<p>Redirecting...</p>
+<script>
+sessionStorage.startingParams = location.search
+location.replace('/api/authorize?command=redirect')
+</script>

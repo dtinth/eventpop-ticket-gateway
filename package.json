@@ -5,6 +5,8 @@
     "vercel": "^20.1.1"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "@types/jsonwebtoken": "^8.5.0",
+    "axios": "^0.19.2",
+    "jsonwebtoken": "^8.5.1"
   }
 }

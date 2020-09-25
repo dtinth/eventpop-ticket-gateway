@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<title>Verifying...</title>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+</style>
+<p id="statusEl">Verifying your tickets...</p>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  try {
+    var query = new URLSearchParams(location.search)
+    var params = new URLSearchParams(sessionStorage.startingParams)
+    var eventId = params.get('eventId')
+    var code = query.get('code')
+    if (!eventId) {
+      throw new Error('Cannot retrieve event')
+    }
+    if (!code) {
+      throw new Error('Cannot find authorization code')
+    }
+    axios
+      .post('/api/authorize?command=getTokens', {
+        eventId: eventId,
+        code: code,
+      })
+      .then(function (response) {
+        if (!response.data.idTokens) {
+          throw new Error('No ID tokens found in response...')
+        }
+        sessionStorage.idTokens = JSON.stringify(response.data.idTokens)
+        location.replace('choose.html')
+      })
+      .catch(function (error) {
+        var append = ''
+        if (
+          error.response &&
+          error.response.error &&
+          error.response.error.message
+        ) {
+          append = ' (' + error.response.error.message + ')'
+        }
+        statusEl.textContent = 'Failed! ' + error + append
+      })
+  } catch (error) {
+    statusEl.textContent = 'Failed! ' + error
+  }
+</script>

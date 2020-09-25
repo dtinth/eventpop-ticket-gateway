@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose your ticket</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@1.8.10/dist/tailwind.min.css"
+      integrity="sha256-iDkm+6+g02b+JwSCy00as47Ywhx+tP+NvegUVP+Wsa8="
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <div v-if="false" class="p-6">Loading...</div>
+      <template v-if="true">
+        <div class="p-6">
+          <template v-if="!tickets.length">
+            You don’t have any tickets for this event, sorry...
+          </template>
+          <template v-else>
+            Please select your ticket to continue...
+            <ul>
+              <li v-for="ticket of tickets">
+                <a
+                  class="block rounded border border-gray-300 mt-4 p-3"
+                  href="javascript://"
+                  @click="selectTicket(ticket)"
+                >
+                  <strong>
+                    {{ticket.profile.firstname}} {{ticket.profile.lastname}}
+                  </strong>
+                  <br />
+                  {{ticket.profile.email}}
+                  <br />
+                  <span class="text-gray-600">
+                    {{ticket.profile.referenceCode}} /
+                    {{ticket.profile.ticketType}}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </template>
+        </div>
+      </template>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.global.js"
+      integrity="sha256-1gOsi3Ij46tHVz7VInLpcrANPCcBjd8tk/xRd4KyZwU="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      var vm = Vue.createApp({
+        setup: function () {
+          return {
+            tickets: JSON.parse(sessionStorage.idTokens),
+            selectTicket: function (ticket) {
+              alert(ticket.idToken)
+            },
+          }
+        },
+      }).mount('#app')
+    </script>
+  </body>
+</html>
