@@ -2,6 +2,23 @@
 
 A gateway that lets Eventpop ticket holders authenticate themselves
 
+## Why
+
+Eventpop’s API has **User Authentication Flow**. However, a user can have
+multiple tickets for multiple events.
+
+Usually, when integrating with Eventpop, I find that most of the time I care
+about a single ticket for a single event. That means each time I integrate with
+Eventpop I have to filter out tickets for unrelated event and develop a UI to
+let the user choose what ticket they want to use with the system.
+
+This repository implements the so-called **Ticket Authentication Flow**. Once
+user has authenticated and selected a ticket, we (the Ticket Gateway) send the
+user back to the application along with a
+[JWT ID token](https://auth0.com/docs/tokens/id-tokens) signed with an RS256
+private key. The system can verify the validity of the ID token by checking it
+against the public key.
+
 ## Plan
 
 ![](http://www.plantuml.com/plantuml/svg/bP91JyCm38Nl_HLMkO04hRG34fF6Dc0Wxd168RMQg5bS9HxL-FKqwIWRb4wxv61_UTRpyyApSBnPc-JLeuEhMrZMjT5Ii2OBKp1KQflirG8IqIcK14pmecM534-2iH7RNYOzhASjdpiij4F9cUArcUC7MdukPZVNaqdo1_yzPXNeckf-m7SX29FOiCh3Gqv_OjBtVbJwvdn8OOj-w5D15Y-XTkZR5h3I7b991QOd6fV2c7SXgyvuK9XbMJPaUi0MKuKswUl38uIKwFrRP8_fbiWTuCzt6LmSa-UE7uj9AYAFq2WjrOuFM_AwjA0jD9hLs8wMT_SFgyUn0OSnHASn1rQuVxJ_77BUBlmiVeghNw0jsgl_0W00)
