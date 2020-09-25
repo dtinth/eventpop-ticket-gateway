@@ -51,12 +51,33 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      var params = new URLSearchParams(sessionStorage.startingParams)
       var vm = Vue.createApp({
         setup: function () {
           return {
             tickets: JSON.parse(sessionStorage.idTokens),
             selectTicket: function (ticket) {
-              alert(ticket.idToken)
+              var target = params.get('target')
+              var hash = params.get('hash').replace(/^#/, '') || ''
+              if (target.match(/^localhost:\d+$/)) {
+                location.href =
+                  'http://' +
+                  target +
+                  '/#' +
+                  hash +
+                  '#eventpop_ticket_token=' +
+                  ticket.idToken
+              } else if (target === 'qz.netlify.app') {
+                location.href =
+                  'https://' +
+                  target +
+                  '/#' +
+                  hash +
+                  '#eventpop_ticket_token=' +
+                  ticket.idToken
+              } else {
+                alert(ticket.idToken)
+              }
             },
           }
         },

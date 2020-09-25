@@ -99,6 +99,7 @@ async function getProfilesFromEventpop(
   }
   return tickets.map(
     (ticket): ProfileData => ({
+      ticketId: ticket.id,
       eventId: ticket.event_id,
       firstname: ticket.firstname,
       lastname: ticket.lastname,
@@ -111,6 +112,7 @@ async function getProfilesFromEventpop(
 
 type ProfileData = {
   eventId: string
+  ticketId: string
   firstname: string
   lastname: string
   email: string
