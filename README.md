@@ -9,13 +9,16 @@ multiple tickets for multiple events.
 
 Usually, when integrating with Eventpop, I find that most of the time I care
 about a single ticket for a single event. That means each time I integrate with
-Eventpop I have to filter out tickets for unrelated event and develop a UI to
-let the user choose what ticket they want to use with the system.
+Eventpop I have to implement the following logic:
 
-This repository implements the so-called **Ticket Authentication Flow**. Once
-user has authenticated and selected a ticket, we (the Ticket Gateway) send the
-user back to the application along with a
-[JWT ID token](https://auth0.com/docs/tokens/id-tokens) signed with an RS256
+1. If user doesn’t have a ticket for the current event, they cannot continue.
+2. If user has multiple tickets for the current event, let them pick which one
+   to use.
+
+This repository implements the so-called **Ticket Authentication Flow** which
+takes care of the above requirements. Once user has authenticated and selected a
+ticket, we (the Ticket Gateway) send the user back to the application along with
+a [JWT ID token](https://auth0.com/docs/tokens/id-tokens) signed with an RS256
 private key. The system can verify the validity of the ID token by checking it
 against the public key.
 
