@@ -57,8 +57,8 @@
           return {
             tickets: JSON.parse(sessionStorage.idTokens),
             selectTicket: function (ticket) {
-              var target = params.get('target')
-              var hash = params.get('hash').replace(/^#/, '') || ''
+              var target = params.get('target') || ''
+              var hash = (params.get('hash') || '').replace(/^#/, '') || ''
               if (target.match(/^localhost:\d+$/)) {
                 location.href =
                   'http://' +
@@ -75,6 +75,8 @@
                   hash +
                   '#eventpop_ticket_token=' +
                   ticket.idToken
+              } else if (target.match(/:\/\//)) {
+                location.href = new URL('?id_token=' + ticket.idToken, target).toString()
               } else {
                 alert(ticket.idToken)
               }
