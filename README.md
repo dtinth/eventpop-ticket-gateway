@@ -14,7 +14,7 @@ can verify the authenticity of the token without having to share `client_secret`
 `access_token`, or any other secret. Just use the public key [(below)][pk] to
 verify the JWT.
 
-[pk]: #after-user-select-ticket-they-will-be-redirected-to-application-with
+[pk]: #3-extract-and-validate-the-id-token
 
 ## Why
 
@@ -40,19 +40,44 @@ against the [public key][pk].
 
 ![](http://www.plantuml.com/plantuml/svg/bP91JyCm38Nl_HLMkO04hRG34fF6Dc0Wxd168RMQg5bS9HxL-FKqwIWRb4wxv61_UTRpyyApSBnPc-JLeuEhMrZMjT5Ii2OBKp1KQflirG8IqIcK14pmecM534-2iH7RNYOzhASjdpiij4F9cUArcUC7MdukPZVNaqdo1_yzPXNeckf-m7SX29FOiCh3Gqv_OjBtVbJwvdn8OOj-w5D15Y-XTkZR5h3I7b991QOd6fV2c7SXgyvuK9XbMJPaUi0MKuKswUl38uIKwFrRP8_fbiWTuCzt6LmSa-UE7uj9AYAFq2WjrOuFM_AwjA0jD9hLs8wMT_SFgyUn0OSnHASn1rQuVxJ_77BUBlmiVeghNw0jsgl_0W00)
 
-## Initiate authentication
+## How to integrate
+
+### 1. Redirect user to ticket gateway
+
+Construct a URL to the ticket gateway’s `redirect.html` with the following query params:
+
+- `eventId` Eventpop event ID.
+- `target` The target URL to redirect to. Should contain an `%s` in it.
+
+Example:
+
+```js
+const url = 'https://eventpop-ticket-gateway.vercel.app/redirect.html?' + new URLSearchParams({
+  eventId: '13089',
+  target: 'https://httpbin.org/anything?id_token=%s'
+})
+console.log(url)
+```
+
+Generates the following URL:
+
+> <https://eventpop-ticket-gateway.vercel.app/redirect.html?eventId=13089&target=https%3A%2F%2Fhttpbin.org%2Fanything%3Fid_token%3D%25s>
+
+### 2. User logs in with Eventpop and selects a ticket
+
+![image](https://user-images.githubusercontent.com/193136/178738038-a490777c-71f9-41ab-8a57-d64294bf56e5.png)
+
+After user select ticket, they will be redirected to the URL specified in `target` param. The `%s` will be replaced by the **ID token**.
+
+### 3. Extract and validate the ID token
+
+Extract the ID token from the URL. Here is an example ID token:
 
 ```
-/redirect.html?eventId=9622&target=https://…/callback
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWNrZXRJZCI6NDc4MDU2OSwiZXZlbnRJZCI6MTMwODksImZpcnN0bmFtZSI6IlRoYWkiLCJsYXN0bmFtZSI6IlBhbmdzYWt1bHlhbm9udCIsImVtYWlsIjoiW3JlZGFjdGVkXUBnbWFpbC5jb20iLCJyZWZlcmVuY2VDb2RlIjoiUkVEQUNUIiwidGlja2V0VHlwZSI6IuC4muC4seC4leC4o-C5gOC4guC4ouC5iOC4hyIsInRhcmdldCI6Imh0dHBzOi8vaHR0cGJpbi5vcmcvYW55dGhpbmc_aWRfdG9rZW49JXMiLCJpYXQiOjE2NTc3MTY2ODksImV4cCI6MTY1Nzc1MjY4OX0.RDPOgFg8XTs2JkcfVEF6p8_8dWBSGN73dC3i0JyZM6fXtDukurKHff3T3mWYkdLZbt3wDt760IcynyhQhEVLxhjVzczmwRvFU5BH0c87XIwF18tpRXH8PbNG9XgNduP6MhoLNIxXcrQWMDcj4QDiC0BfTyd4EZNdAwolAYzytxyjMYskBb3w61y8u4ncQ2xdipfbbwx8zAYMcs_1IvryJWITIM5Fi7HmTI_oldt93lNgBA5mQ1cKpHSj0jqkq67rVMirFrDrmhmTHX7OKALBHZwk734hNqMrZIWIdjYBLZ-fP_ctDYwwOo5e5qbTw9Hq--mKlDA-uqS75GDX0_kQ2Q
 ```
 
-## After user select ticket, they will be redirected to application with
-
-```
-?id_token=${idToken}
-```
-
-The `idToken` is a JWT, signed with this key:
+Verify its signature using the following public key:
 
 ```
 -----BEGIN PUBLIC KEY-----
@@ -66,11 +91,29 @@ swIDAQAB
 -----END PUBLIC KEY-----
 ```
 
-It contains these information:
+Then, when decoded, you will find the following claims:
 
-- `email`
-- `eventId`
-- `firstname`
-- `lastname`
-- `referenceCode`
-- `ticketType`
+```json
+{
+  "ticketId": 4780569,
+  "eventId": 13089,
+  "firstname": "Thai",
+  "lastname": "Pangsakulyanont",
+  "email": "[redacted]@gmail.com",
+  "referenceCode": "REDACT",
+  "ticketType": "บัตรเขย่ง",
+  "target": "https://httpbin.org/anything?id_token=%s",
+  "iat": 1657716689,
+  "exp": 1657752689
+}
+```
+
+Perform these checks:
+
+| Claim | Condition |
+| ----- | --------- |
+| `eventId` | Should match the event ID that you are integrating. |
+| `ticketType` | Should be the name of the ticket type that you accept. Skip this check if you intend to a accept all ticket types. |
+| `target` | Should match the target URL that you provided in step 1. |
+| `exp` | Should be greater than the current Unix timestamp. |
+
