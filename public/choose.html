@@ -75,6 +75,8 @@
                   hash +
                   '#eventpop_ticket_token=' +
                   ticket.idToken
+              } else if (target.match(/%s/)) {
+                location.href = target.replace(/%s/, ticket.idToken)
               } else if (target.match(/:\/\//)) {
                 location.href = new URL('?id_token=' + ticket.idToken, target).toString()
               } else {

@@ -43,13 +43,13 @@ against the [public key][pk].
 ## Initiate authentication
 
 ```
-/redirect.html?eventId=9622
+/redirect.html?eventId=9622&target=https://…/callback
 ```
 
 ## After user select ticket, they will be redirected to application with
 
 ```
-#token=${idToken}
+?id_token=${idToken}
 ```
 
 The `idToken` is a JWT, signed with this key:

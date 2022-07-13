@@ -15,6 +15,7 @@
     var params = new URLSearchParams(sessionStorage.startingParams)
     var eventId = params.get('eventId')
     var code = query.get('code')
+    var target = params.get('target') || ''
     if (!eventId) {
       throw new Error('Cannot retrieve event')
     }
@@ -25,6 +26,7 @@
       .post('/api/authorize?command=getTokens', {
         eventId: eventId,
         code: code,
+        target: target,
       })
       .then(function (response) {
         if (!response.data.idTokens) {
