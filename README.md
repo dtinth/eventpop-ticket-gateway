@@ -1,6 +1,20 @@
 # eventpop-ticket-gateway
 
-A gateway that lets Eventpop ticket holders authenticate themselves
+A gateway that lets Eventpop ticket holders authenticate themselves.
+
+This gateway is built for [Creatorsgarten](https://creatorsgarten.org/) team,
+who organizes many events that covers multiple themes, organized by different
+people, but under the same umbrella.
+
+This gateway provides a way for developers to provide a "Authenticate using
+Eventpop Ticket" experience without needing to implement the whole OAuth2 flow.
+
+The ticket gateway uses RSA signatures to sign the ID token, so consumers
+can verify the authenticity of the token without having to share `client_secret`,
+`access_token`, or any other secret. Just use the public key [(below)][pk] to
+verify the JWT.
+
+[pk]: #after-user-select-ticket-they-will-be-redirected-to-application-with
 
 ## Why
 
@@ -20,7 +34,7 @@ takes care of the above requirements. Once user has authenticated and selected a
 ticket, we (the Ticket Gateway) send the user back to the application along with
 a [JWT ID token](https://auth0.com/docs/tokens/id-tokens) signed with an RS256
 private key. The system can verify the validity of the ID token by checking it
-against the public key.
+against the [public key][pk].
 
 ## Plan
 
