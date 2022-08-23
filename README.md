@@ -14,6 +14,11 @@ can verify the authenticity of the token without having to share `client_secret`
 `access_token`, or any other secret. Just use the public key [(below)][pk] to
 verify the JWT.
 
+| Without eventpop-ticket-gateway | With eventpop-ticket-gateway |
+| ------------------------------- | ---------------------------- |
+| `client_secret` has to be shared with each developer for them to develop Eventpop integrations. | No need to share `client_secret`. |
+| Developer must make multiple API calls to Eventpop API and develop UIs to handle the sign-in and ticket selection flow. | No API calls — just redirect user to the gateway and it redirects user back to your app with a JWT. Pre-built UIs for ticket selection is provided. |
+
 [pk]: #3-extract-and-validate-the-id-token
 
 ## Why
@@ -36,7 +41,7 @@ a [JWT ID token](https://auth0.com/docs/tokens/id-tokens) signed with an RS256
 private key. The system can verify the validity of the ID token by checking it
 against the [public key][pk].
 
-## Plan
+## Ticket Authentication Flow Sequence Diagram
 
 ![](http://www.plantuml.com/plantuml/svg/bP91JyCm38Nl_HLMkO04hRG34fF6Dc0Wxd168RMQg5bS9HxL-FKqwIWRb4wxv61_UTRpyyApSBnPc-JLeuEhMrZMjT5Ii2OBKp1KQflirG8IqIcK14pmecM534-2iH7RNYOzhASjdpiij4F9cUArcUC7MdukPZVNaqdo1_yzPXNeckf-m7SX29FOiCh3Gqv_OjBtVbJwvdn8OOj-w5D15Y-XTkZR5h3I7b991QOd6fV2c7SXgyvuK9XbMJPaUi0MKuKswUl38uIKwFrRP8_fbiWTuCzt6LmSa-UE7uj9AYAFq2WjrOuFM_AwjA0jD9hLs8wMT_SFgyUn0OSnHASn1rQuVxJ_77BUBlmiVeghNw0jsgl_0W00)
 
