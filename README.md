@@ -119,6 +119,6 @@ Perform these checks:
 | ----- | --------- |
 | `eventId` | Should match the event ID that you are integrating. |
 | `ticketType` | Should be the name of the ticket type that you accept. Skip this check if you intend to a accept all ticket types. |
-| `target` | Should match the target URL that you provided in step 1. |
+| `aud` or `target` | Should match the target URL that you provided in step 1. |
 | `exp` | Should be greater than the current Unix timestamp. |
 
