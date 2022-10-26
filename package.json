@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/jsonwebtoken": "^8.5.0",
     "axios": "^0.19.2",
+    "jose": "^4.10.3",
     "jsonwebtoken": "^8.5.1"
   }
 }

@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/.well-known/openid-configuration",
+      "destination": "/api/authorize?command=openid-configuration"
+    },
+    {
+      "source": "/.well-known/jwks.json",
+      "destination": "/api/authorize?command=jwks"
+    }
+  ]
+}
