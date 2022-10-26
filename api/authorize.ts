@@ -12,6 +12,8 @@ const privateKey = Buffer.from(
 
 const publicKeyObject = crypto.createPublicKey(privateKey)
 
+const baseUrl = process.env.GATEWAY_URL || `https://${process.env.VERCEL_URL}`
+
 export default async (request: NowRequest, response: NowResponse) => {
   if (request.query.command === 'redirect') {
     const url =
@@ -44,8 +46,8 @@ export default async (request: NowRequest, response: NowResponse) => {
     response.setHeader('Access-Control-Allow-Origin', '*')
     response.status(200).json({
       id_token_signing_alg_values_supported: ['RS256'],
-      issuer: process.env.VERCEL_URL,
-      jwks_uri: process.env.VERCEL_URL + '/.well-known/jwks.json',
+      issuer: baseUrl,
+      jwks_uri: baseUrl + '/.well-known/jwks.json',
       response_types_supported: ['id_token'],
       subject_types_supported: ['public'],
     })
@@ -158,7 +160,7 @@ function mintUserToken(profile: ProfileData, target: string) {
   return new Promise<string>((resolve, reject) => {
     jwt.sign(
       {
-        iss: process.env.VERCEL_URL,
+        iss: baseUrl,
         aud: target,
         ...profile,
         target,
